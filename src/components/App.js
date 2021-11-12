@@ -12,12 +12,19 @@ import Logout from './Logout';
 const App = () => {
   return (
     <AppContainer>
-      <LambdaHeader/>
-      <Header/>
+      <LambdaHeader />
+      <Header />
       <RouteContainer>
+
         <Route exact path="/">
-          <Login/>
-        </Route>          
+          <Login />
+        </Route>
+
+        <PrivateRoute path="/view"
+          component={View} />
+        <PrivateRoute path="logout"
+          component={Logout} />
+
       </RouteContainer>
     </AppContainer>
   )

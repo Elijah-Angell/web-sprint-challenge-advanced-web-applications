@@ -1,17 +1,66 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
 
+
+
+
+
+const initialValues = { username: "", password: "" };
+
 const Login = () => {
-    
-    return(<ComponentContainer>
+    const { push } = useHistory()
+    const [formValues, setFormValues] = useState(initialValues);
+
+    const handleChange = e => {
+        setFormValues({ ...formValues, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = e => {
+        e.preventDefault();
+        axios.post("http://localhost:5000/api/login", formValues)
+            .then((res) => {
+                window.localStorage.setItem('token', res.data.token);
+                window.localStorage.setItem('role', res.data.role);
+
+                push("/view");
+            })
+            .catch((err) => console.log(err.message));
+    };
+
+
+
+
+    return (<ComponentContainer>
         <ModalContainer>
             <h1>Welcome to Blogger Pro</h1>
             <h2>Please enter your account information.</h2>
+            <div>
+                <form onSubmit={handleSubmit} >
+                    <input
+                        id="username"
+                        name="username"
+                        value={formValues.username}
+                        onChange={handleChange} />
+                    <input
+                        id="password"
+                        name="password"
+                        value={formValues.password}
+                        onChange={handleChange}
+                    />
+                    <button id="submit">Login</button>
+                </form>
+
+                <p id="error"></p>
+
+            </div>
         </ModalContainer>
     </ComponentContainer>);
 }
 
 export default Login;
+
 
 //Task List
 //1. Build login form DOM from scratch, making use of styled components if needed. Make sure the username input has id="username" and the password input as id="password".
@@ -53,5 +102,4 @@ const Input = styled.input`
 
 const Button = styled.button`
     padding:1rem;
-    width: 100%;
-`
+    width: 100%`
